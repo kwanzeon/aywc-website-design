@@ -277,7 +277,7 @@ function Footer({ t }) {
           </div>
         </div>
         <div style={{ borderTop: "1px solid rgba(232,221,208,0.08)", paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-          <div style={{ color: "rgba(232,221,208,0.4)", fontSize: "0.75rem" }}>© White Mountain Education Association. All rights reserved.</div>
+          <div style={{ color: "rgba(232,221,208,0.65)", fontSize: "0.75rem" }}>© 2026 White Mountain Education Association. All rights reserved.</div>
           <div style={{ display: "flex", gap: "2rem" }}>
             {NAV_LINKS.map(l => (
               <a key={l.label} href={l.href} className="on-dark" style={{ color: "rgba(232,221,208,0.65)", fontSize: "0.75rem", fontWeight: 400, letterSpacing: 1, transition: "color 0.2s" }}
