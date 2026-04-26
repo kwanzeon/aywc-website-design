@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources — Agni Yoga World Community</title>
+<meta name="description" content="Free resources for students of Agni Yoga: the fourteen-volume series, Helena Roerich's Notebooks, the Agni Yoga Companion, Roerich paintings, study guides, and more.">
+<link rel="icon" type="image/x-icon" href="uploads/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"theme":"threshold","titleFont":"cinzel"}/*EDITMODE-END*/;
+
+function ResourcesPage() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const t = aywcThemes[tweaks.theme] || aywcThemes.threshold;
+
+  useEffect(() => {
+    const font = tweaks.titleFont === "cinzel" ? "'Cinzel', serif" : "'Jost', sans-serif";
+    document.documentElement.style.setProperty("--heading-font", font);
+    document.documentElement.style.setProperty("--heading-weight", tweaks.titleFont === "cinzel" ? "400" : "300");
+    const s = document.createElement("style");
+    s.textContent = commonCSS;
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, [tweaks.titleFont]);
+
+  const py = "5rem";
+
+  const featuredPublications = [
+    {
+      id: "notebooks",
+      label: "Helena Roerich",
+      title: "Helena Roerich's Notebooks",
+      desc: "Helena Roerich's personal spiritual diaries — an intimate record of inner development, vision, and guidance. Available in English and Portuguese translations.",
+      links: [["Read in English →", "https://wmea-world.org/Helena-Roerich/notebooks"], ["Read in Portuguese →", "https://wmea-world.org/Helena-Roerich/notebooks/helena-roerich-notebooks-pt/"]],
+    },
+    {
+      id: "companion",
+      label: "Study Resource",
+      title: "An Agni Yoga Companion",
+      desc: "A community-developed guide for students beginning or deepening their study of the Agni Yoga teachings. Includes commentary, context, and reflection questions.",
+      links: [["View the Companion →", "https://wmea-world.org/dv/an-agni-yoga-companion/"]],
+    },
+    {
+      id: "quarterly",
+      label: "WMEA Publication",
+      title: "Agni Yoga Quarterly",
+      desc: "Published by the White Mountain Education Association — articles, meditations, and studies on the Living Ethics teachings. Current and archived issues available online.",
+      links: [["Read the Quarterly →", "https://wmea-world.org/wmea/agni-yoga/"], ["Subscribe →", "https://wmea-world.org/dv/ayq-registration-form/"], ["Archived MMI →", "https://wmea-world.org/wmea/agni-yoga/archived-mmi/"]],
+    },
+    {
+      id: "campbell",
+      label: "Historical Documents",
+      title: "Letters of Katherine Campbell to Madame Roerich",
+      desc: "A rare correspondence between an early American student of the teachings and Helena Roerich, offering insight into the early years of the Agni Yoga community in the West.",
+      links: [["Read the letters →", "https://wmea-world.org/dv/katherine-campbell-stibbe/"]],
+    },
+  ];
+
+  return (
+    <div style={{ background: t.bg, minHeight: "100vh" }}>
+      <Nav t={t} currentPage="resources.html" />
+
+      <PageHero t={t}
+        label="Open Access"
+        title="Resources"
+        subtitle="Freely available texts, publications, study aids, and multimedia materials to support your study of the Agni Yoga teachings."
+        breadcrumb={true}
+      />
+
+      <main id="main-content">
+
+        {/* ── FEATURED PUBLICATIONS ── */}
+        <section id="publications" aria-labelledby="pub-heading" style={{ background: t.darkSection, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ marginBottom: "3rem" }}>
+              <SectionLabel t={t} onDark={true}>Featured</SectionLabel>
+              <SectionHeading t={t} id="pub-heading" color={t.darkSectionText}>Publications</SectionHeading>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5px", background: "rgba(232,221,208,0.08)" }}>
+              {featuredPublications.map((p) => (
+                <div key={p.id} id={p.id} style={{ background: "rgba(255,255,255,0.04)", padding: "2.5rem" }}>
+                  <div style={{ color: t.accentOnDark, fontSize: 9, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600, marginBottom: "0.8rem" }}>{p.label}</div>
+                  <h3 style={{ color: t.darkSectionText, fontSize: "1rem", fontWeight: 500, lineHeight: 1.4, marginBottom: "1rem" }}>{p.title}</h3>
+                  <p style={{ color: t.darkSectionMuted, fontSize: "0.88rem", lineHeight: 1.8, fontWeight: 300, marginBottom: "1.5rem" }}>{p.desc}</p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    {p.links.map(([label, href]) => (
+                      <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="on-dark"
+                        style={{ color: t.accentOnDark, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center" }}>
+                        {label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── THE TEXTS ── */}
+        <section id="texts" aria-labelledby="texts-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "6rem", alignItems: "start" }}>
+              <div>
+                <SectionLabel t={t}>Primary Source</SectionLabel>
+                <SectionHeading t={t} id="texts-heading">The Agni Yoga Series</SectionHeading>
+                <div style={{ width: 48, height: 1, background: t.sectionLine, margin: "1.5rem 0" }}></div>
+                <p style={{ color: t.textMuted, fontSize: "0.9rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "1.5rem" }}>
+                  The fourteen volumes of the Agni Yoga series, also called Living Ethics, are available freely online in multiple languages. Originally published by the Agni Yoga Society in New York, the series was transmitted through Helena Roerich between the 1920s and 1950s.
+                </p>
+                <a href="https://www.agniyoga.org" target="_blank" rel="noopener noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", padding: "0.8rem 2rem", background: t.accent, color: t.accentText, fontSize: 10, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase" }}>
+                  Browse all texts →
+                </a>
+              </div>
+              <div>
+                <CardGrid t={t} cols="repeat(3, 1fr)">
+                  {["Leaves of Morya's Garden I", "Leaves of Morya's Garden II", "Agni Yoga", "Infinity I", "Infinity II", "Hierarchy", "Heart", "Fiery World I", "Fiery World II", "Fiery World III", "Aum", "Brotherhood", "Supermundane I–II", "Supermundane III–IV"].map((book) => (
+                    <div key={book} style={{ background: t.bgCard, padding: "1.2rem 1.5rem", borderBottom: `1px solid ${t.border}` }}>
+                      <div style={{ color: t.text, fontSize: "0.82rem", fontWeight: 400, lineHeight: 1.4 }}>{book}</div>
+                    </div>
+                  ))}
+                </CardGrid>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── INTRODUCTION ── */}
+        <section id="introduction" aria-labelledby="intro-heading" style={{ background: t.bgAlt, padding: `${py} 3rem`, borderTop: `1px solid ${t.border}` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", gap: "6rem", alignItems: "center" }}>
+            <div style={{ flex: 1 }}>
+              <SectionLabel t={t}>For New Students</SectionLabel>
+              <SectionHeading t={t} id="intro-heading">Agni Yoga — An Introduction</SectionHeading>
+              <div style={{ width: 48, height: 1, background: t.sectionLine, margin: "1.5rem 0" }}></div>
+              <p style={{ color: t.textMuted, fontSize: "0.95rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "2rem" }}>
+                New to the teachings? "Agni Yoga — An Introduction" provides accessible context for the entire series — the historical background, the key themes, and practical guidance for how to approach these books as a student.
+              </p>
+              <a href="https://wmea-world.org/wmea/thoughts-on-agni-yoga/agni-yoga-an-introduction/" target="_blank" rel="noopener noreferrer"
+                style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center", borderBottom: `1px solid ${t.accent}`, paddingBottom: 2 }}>
+                Read the introduction →
+              </a>
+            </div>
+            <div style={{ flex: 1, background: t.bgCard, padding: "2.5rem", borderLeft: `3px solid ${t.accent}` }}>
+              <p style={{ color: t.textMuted, fontSize: "1rem", fontStyle: "italic", fontWeight: 300, lineHeight: 1.8 }}>
+                "It is a yoga of daily life, of thought refined in fire, of love made conscious — not a retreat from the world but a call to transform it through beauty, service, and the striving of the awakened heart."
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── ROERICH ── */}
+        <section id="roerich" aria-labelledby="roerich-heading" style={{ background: t.darkSection, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "center" }}>
+              <div>
+                <SectionLabel t={t} onDark={true}>Art & Vision</SectionLabel>
+                <SectionHeading t={t} id="roerich-heading" color={t.darkSectionText}>Nicholas Roerich</SectionHeading>
+                <div style={{ width: 48, height: 1, background: t.accentOnDark, margin: "1.5rem 0", opacity: 0.5 }}></div>
+                <p style={{ color: t.darkSectionMuted, fontSize: "0.95rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "1.5rem" }}>
+                  Nicholas Roerich (1874–1947) was a Russian painter, philosopher, archaeologist, and explorer. His more than seven thousand paintings — many depicting the Himalayas and scenes of spiritual striving — are inseparable from the Agni Yoga teachings he and Helena brought to the world.
+                </p>
+                <p style={{ color: t.darkSectionMuted, fontSize: "0.95rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "2rem" }}>
+                  His Central Asian expedition (1924–1928) traced ancient spiritual routes across five countries and resulted in groundbreaking ethnographic and archaeological work. His Banner of Peace — a flag symbolising the protection of cultural heritage — became an international movement.
+                </p>
+                <a href="https://www.roerich.org" target="_blank" rel="noopener noreferrer" className="on-dark"
+                  style={{ display: "inline-flex", alignItems: "center", padding: "0.8rem 2rem", background: t.accentOnDark, color: "#162840", fontSize: 10, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase" }}>
+                  Nicholas Roerich Museum →
+                </a>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5px", background: "rgba(232,221,208,0.08)" }}>
+                {[["Paintings", "7,000+"], ["Expeditions", "Central Asia, 1924–28"], ["Countries visited", "30+"], ["Books written", "30+"], ["Banner of Peace", "International treaty"], ["Museum", "Upper West Side, NYC"]].map(([label, value]) => (
+                  <div key={label} style={{ background: "rgba(255,255,255,0.04)", padding: "1.5rem" }}>
+                    <div style={{ color: t.accentOnDark, fontSize: "0.7rem", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
+                    <div style={{ color: t.darkSectionText, fontSize: "0.9rem", fontWeight: 400 }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── AUDIO/VIDEO & OTHER ── */}
+        <section id="audio" aria-labelledby="audio-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ marginBottom: "3rem" }}>
+              <SectionLabel t={t}>Multimedia</SectionLabel>
+              <SectionHeading t={t} id="audio-heading">Audio &amp; Video</SectionHeading>
+            </div>
+            <CardGrid t={t} cols="repeat(3, 1fr)">
+              {[
+                { title: "Sunday Lecture Audio", desc: "Free audio recordings of WMEA's weekly Sunday lectures on the Agni Yoga teachings.", link: ["Listen →", "https://wmea-world.org/dv/sunday-talks-audio/"] },
+                { title: "Video Lectures (YouTube)", desc: "WMEA's full video lecture library on the Agni Yoga and Ageless Wisdom teachings.", link: ["Watch →", "https://youtube.com/playlist?list=PLGsZzMSO6Q9SIeFn4TVbJvmYw7lKLrzXy"] },
+                { title: "Quote of the Day", desc: "A daily passage from the Agni Yoga series — a simple way to bring the teachings into daily rhythm.", link: ["Read today's quote →", "https://wmea-world.org/dv/quote-of-the-day/"] },
+                { title: "Talks on Agni Yoga Blog", desc: "An ongoing blog of reflections, commentaries, and studies on the Agni Yoga teachings from Rev. Joleen DuBois.", link: ["Read the blog →", "https://wmea-world.org/toay"] },
+                { title: "Study Guides", desc: "Community-developed companion guides and reflection questions for each volume of the series.", link: ["Download →", "#"] },
+                { title: "Translations", desc: "Editions of the Agni Yoga series in over a dozen languages with translators' notes.", link: ["Explore →", "#"] },
+              ].map((r, i) => (
+                <Card t={t} key={i}>
+                  <AccentLine t={t} />
+                  <h3 style={{ color: t.text, fontSize: "0.92rem", fontWeight: 600, marginBottom: "0.7rem" }}>{r.title}</h3>
+                  <p style={{ color: t.textMuted, fontSize: "0.85rem", lineHeight: 1.7, fontWeight: 300, marginBottom: "1.2rem" }}>{r.desc}</p>
+                  <a href={r.link[1]} target={r.link[1].startsWith("http") ? "_blank" : undefined}
+                    rel={r.link[1].startsWith("http") ? "noopener noreferrer" : undefined}
+                    style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center" }}>{r.link[0]}</a>
+                </Card>
+              ))}
+            </CardGrid>
+          </div>
+        </section>
+
+        {/* ── GALLERY ── */}
+        <section id="gallery" aria-labelledby="gallery-heading" style={{ background: t.bgAlt, padding: `${py} 3rem`, borderTop: `1px solid ${t.border}` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "2rem" }}>
+            <div>
+              <SectionLabel t={t}>Roerich Art</SectionLabel>
+              <SectionHeading t={t} id="gallery-heading">Painting Gallery</SectionHeading>
+              <div style={{ width: 48, height: 1, background: t.sectionLine, margin: "1.5rem 0" }}></div>
+              <p style={{ color: t.textMuted, fontSize: "0.95rem", lineHeight: 1.85, fontWeight: 300, maxWidth: 600 }}>
+                Nicholas Roerich's paintings of the Himalayas, spiritual light, and the inner journey have become iconic symbols of the Agni Yoga path. The Nicholas Roerich Museum in New York holds the world's largest collection — over 200 paintings — with free admission.
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <a href="https://www.roerich.org" target="_blank" rel="noopener noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", padding: "0.8rem 2rem", background: t.accent, color: t.accentText, fontSize: 10, fontWeight: 600, letterSpacing: 3, textTransform: "uppercase", whiteSpace: "nowrap" }}>
+                Visit the Museum →
+              </a>
+              <a href="https://www.roerich.org/roerich-paintings-gallery.php" target="_blank" rel="noopener noreferrer"
+                style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                Online gallery →
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </main>
+      <Footer t={t} />
+
+      <TweaksPanel>
+        <TweakSection label="Theme">
+          <TweakRadio label="Palette" value={tweaks.theme} onChange={v => setTweak("theme", v)}
+            options={[{ value: "midnight", label: "Midnight" }, { value: "dawn", label: "Dawn" }, { value: "threshold", label: "Threshold" }]} />
+        </TweakSection>
+        <TweakSection label="Typography">
+          <TweakRadio label="Headings" value={tweaks.titleFont} onChange={v => setTweak("titleFont", v)}
+            options={[{ value: "cinzel", label: "Cinzel" }, { value: "jost", label: "Jost" }]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<ResourcesPage />);
+</script>
+</body>
+</html>

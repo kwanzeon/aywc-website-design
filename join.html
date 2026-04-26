@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join &amp; Contact — Agni Yoga World Community</title>
+<meta name="description" content="Connect with the Agni Yoga World Community. Register your study group, submit news, contribute resources, or get in touch with a general enquiry.">
+<link rel="icon" type="image/x-icon" href="uploads/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"theme":"threshold","titleFont":"cinzel"}/*EDITMODE-END*/;
+
+function JoinPage() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const t = aywcThemes[tweaks.theme] || aywcThemes.threshold;
+  const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const font = tweaks.titleFont === "cinzel" ? "'Cinzel', serif" : "'Jost', sans-serif";
+    document.documentElement.style.setProperty("--heading-font", font);
+    document.documentElement.style.setProperty("--heading-weight", tweaks.titleFont === "cinzel" ? "400" : "300");
+    const s = document.createElement("style");
+    s.textContent = commonCSS;
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, [tweaks.titleFont]);
+
+  const validate = (form) => {
+    const errs = {};
+    if (!form.name.value.trim()) errs.name = "Name is required.";
+    if (!form.email.value.trim()) errs.email = "Email address is required.";
+    else if (!/^[^@]+@[^@]+\.[^@]+$/.test(form.email.value)) errs.email = "Please enter a valid email address.";
+    if (!form.message.value.trim()) errs.message = "Message is required.";
+    return errs;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const errs = validate(e.target);
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    setErrors({});
+    setSent(true);
+  };
+
+  const py = "5rem";
+  const inputStyle = {
+    width: "100%", padding: "0.85rem 1rem",
+    background: t.inputBg, border: `1px solid ${t.inputBorder}`,
+    color: t.text, fontSize: "0.9rem", fontFamily: "'Jost', sans-serif",
+    outline: "none", transition: "border-color 0.2s",
+  };
+  const selectStyle = {
+    ...inputStyle,
+    background: t.inputBg, color: t.text,
+  };
+  const errStyle = { color: "#B00020", fontSize: "0.78rem", marginTop: "0.2rem" };
+
+  return (
+    <div style={{ background: t.bg, minHeight: "100vh" }}>
+      <Nav t={t} currentPage="join.html" />
+
+      <PageHero t={t}
+        label="Open to All"
+        title="Join &amp; Contact"
+        subtitle="Whether you are new to the teachings or an experienced student, you are welcome here. Get in touch or register your group."
+        breadcrumb={true}
+      />
+
+      <main id="main-content">
+        <section aria-labelledby="join-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem" }}>
+
+            {/* Left — info */}
+            <div>
+              <SectionLabel t={t}>About This Community</SectionLabel>
+              <h2 id="join-heading" style={{
+                fontFamily: "var(--heading-font)", fontWeight: "var(--heading-weight)",
+                fontSize: "clamp(1.8rem, 3vw, 2.5rem)", color: t.text, marginBottom: "1.5rem",
+              }}>Get Involved</h2>
+              <p style={{ color: t.textMuted, fontSize: "0.95rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "2.5rem" }}>
+                The Agni Yoga World Community is a volunteer-run initiative with no formal membership or hierarchy. We exist only to connect and support the many independent groups and students already active around the world.
+              </p>
+
+              <div style={{ marginBottom: "2.5rem" }}>
+                <div style={{ color: t.text, fontSize: "0.82rem", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", marginBottom: "1.2rem" }}>Ways to Contribute</div>
+                {[
+                  ["Connect", "Find and join an existing local study group"],
+                  ["Register", "Add your own group to the world directory"],
+                  ["Contribute", "Submit resources, translations, or articles"],
+                  ["Share", "Send us news of events in your region"],
+                  ["Volunteer", "Help maintain and develop this site"],
+                ].map(([title, desc]) => (
+                  <div key={title} style={{ display: "flex", gap: "1rem", marginBottom: "1rem", paddingBottom: "1rem", borderBottom: `1px solid ${t.border}` }}>
+                    <div style={{ color: t.accent, fontSize: "0.78rem", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", width: 80, flexShrink: 0, paddingTop: 2 }}>{title}</div>
+                    <div style={{ color: t.textMuted, fontSize: "0.87rem", fontWeight: 300, lineHeight: 1.6 }}>{desc}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ background: t.bgAlt, padding: "1.5rem 2rem", borderLeft: `3px solid ${t.accent}` }}>
+                <div style={{ color: t.textMuted, fontSize: "0.82rem", fontWeight: 300, lineHeight: 1.7 }}>
+                  <strong style={{ color: t.text, fontWeight: 500 }}>Email: </strong>
+                  <a href="mailto:info@agniYogaWorldCommunity.org" style={{ color: t.accent }}>
+                    info@agniYogaWorldCommunity.org
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Right — form */}
+            <div>
+              <div style={{ color: t.text, fontSize: "0.85rem", fontWeight: 600, letterSpacing: 1, textTransform: "uppercase", marginBottom: "1.5rem" }}>Send a Message</div>
+
+              {sent ? (
+                <div role="status" aria-live="polite" style={{
+                  padding: "3rem 2.5rem", background: t.bgAlt,
+                  borderLeft: `3px solid ${t.accent}`, textAlign: "center",
+                }}>
+                  <div style={{ color: t.accent, fontSize: "1rem", fontWeight: 500, marginBottom: "0.5rem" }}>Message received.</div>
+                  <div style={{ color: t.textMuted, fontSize: "0.88rem", fontWeight: 300 }}>Thank you for reaching out. We will be in touch soon.</div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate aria-label="Contact form">
+                  <div className="field">
+                    <label htmlFor="contact-name" style={{ color: t.textMuted }}>Name</label>
+                    <input id="contact-name" name="name" type="text" placeholder="Your name" required aria-required="true"
+                      aria-describedby={errors.name ? "err-name" : undefined}
+                      aria-invalid={errors.name ? "true" : undefined}
+                      style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = t.accent}
+                      onBlur={e => e.target.style.borderColor = t.inputBorder} />
+                    {errors.name && <span id="err-name" role="alert" style={errStyle}>{errors.name}</span>}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="contact-email" style={{ color: t.textMuted }}>Email</label>
+                    <input id="contact-email" name="email" type="email" placeholder="your@email.com" required aria-required="true"
+                      aria-describedby={errors.email ? "err-email" : undefined}
+                      aria-invalid={errors.email ? "true" : undefined}
+                      style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = t.accent}
+                      onBlur={e => e.target.style.borderColor = t.inputBorder} />
+                    {errors.email && <span id="err-email" role="alert" style={errStyle}>{errors.email}</span>}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="contact-reason" style={{ color: t.textMuted }}>Reason for contact</label>
+                    <select id="contact-reason" style={selectStyle}>
+                      <option value="" style={{ background: t.inputBg, color: t.text }}>Select one…</option>
+                      {["General enquiry", "Register a study group", "Submit news or event", "Contribute resources", "Volunteer offer"].map(o => (
+                        <option key={o} style={{ background: t.inputBg, color: t.text }}>{o}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="contact-message" style={{ color: t.textMuted }}>Message</label>
+                    <textarea id="contact-message" name="message" placeholder="Your message…" required aria-required="true"
+                      aria-describedby={errors.message ? "err-message" : undefined}
+                      aria-invalid={errors.message ? "true" : undefined}
+                      rows={6} style={{ ...inputStyle, resize: "vertical" }}
+                      onFocus={e => e.target.style.borderColor = t.accent}
+                      onBlur={e => e.target.style.borderColor = t.inputBorder}></textarea>
+                    {errors.message && <span id="err-message" role="alert" style={errStyle}>{errors.message}</span>}
+                  </div>
+                  <button type="submit" style={{
+                    width: "100%", padding: "1rem",
+                    background: t.accent, color: t.accentText,
+                    border: "none", cursor: "pointer",
+                    fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase",
+                    fontFamily: "'Jost', sans-serif", transition: "background 0.2s",
+                  }}
+                    onMouseEnter={e => e.target.style.background = t.accentHover}
+                    onMouseLeave={e => e.target.style.background = t.accent}
+                  >Send Message</button>
+                </form>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer t={t} />
+
+      <TweaksPanel>
+        <TweakSection label="Theme">
+          <TweakRadio label="Palette" value={tweaks.theme} onChange={v => setTweak("theme", v)}
+            options={[{ value: "midnight", label: "Midnight" }, { value: "dawn", label: "Dawn" }, { value: "threshold", label: "Threshold" }]} />
+        </TweakSection>
+        <TweakSection label="Typography">
+          <TweakRadio label="Headings" value={tweaks.titleFont} onChange={v => setTweak("titleFont", v)}
+            options={[{ value: "cinzel", label: "Cinzel" }, { value: "jost", label: "Jost" }]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<JoinPage />);
+</script>
+</body>
+</html>

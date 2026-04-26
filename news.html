@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News &amp; Events — Agni Yoga World Community</title>
+<meta name="description" content="Upcoming gatherings, conferences, publications, and community updates from the Agni Yoga World Community.">
+<link rel="icon" type="image/x-icon" href="uploads/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"theme":"threshold","titleFont":"cinzel"}/*EDITMODE-END*/;
+
+const allEvents = [
+  { type: "Conference", year: "2026", title: "WMEA International Living Ethics Conference 2026", date: "2026 · Prescott, Arizona", location: "Prescott, Arizona, USA", body: "Theme: Agni Yoga — The Fiery Signs of a New Humanity. Keynote by Rev. Joleen D. DuBois. Speakers include Gvido Trepsa (Nicholas Roerich Museum) and ten international presenters.", link: "https://wmea-world.org/conference2026" },
+  { type: "Event", year: "2025", title: "International Agni Yoga Conference 2025", date: "September 14–16, 2025", location: "Helsinki & Online", body: "Groups from Europe, the Americas, and Asia gather to share studies on the theme The Heart as the Centre of Consciousness." },
+  { type: "Publication", year: "2025", title: "New Study Guide: Fiery World Volume I", date: "Released April 2025", location: "Community Publication", body: "A community-developed study companion for Fiery World with chapter summaries, questions for reflection, and cross-references across the series." },
+  { type: "Blog", year: "2025", title: "Talks on Agni Yoga — New Posts", date: "Ongoing 2025", location: "Online", body: "Rev. Joleen DuBois continues her ongoing series of reflections and commentaries on passages from the Agni Yoga books.", link: "https://wmea-world.org/toay" },
+  { type: "Classes", year: "2025", title: "WMEA Weekly Sunday Lectures", date: "Every Sunday", location: "Prescott, AZ & Online", body: "Weekly in-person and remote classes on the Living Ethics teachings. Registration required for remote access.", link: "https://wmea-world.org/dv/sunday-lectures-registration/" },
+];
+
+function NewsPage() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const t = aywcThemes[tweaks.theme] || aywcThemes.threshold;
+  const [filter, setFilter] = useState("All");
+
+  useEffect(() => {
+    const font = tweaks.titleFont === "cinzel" ? "'Cinzel', serif" : "'Jost', sans-serif";
+    document.documentElement.style.setProperty("--heading-font", font);
+    document.documentElement.style.setProperty("--heading-weight", tweaks.titleFont === "cinzel" ? "400" : "300");
+    const s = document.createElement("style");
+    s.textContent = commonCSS;
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, [tweaks.titleFont]);
+
+  const types = ["All", "Conference", "Event", "Publication", "Blog", "Classes"];
+  const filtered = filter === "All" ? allEvents : allEvents.filter(e => e.type === filter);
+  const py = "5rem";
+
+  return (
+    <div style={{ background: t.bg, minHeight: "100vh" }}>
+      <Nav t={t} currentPage="news.html" />
+
+      <PageHero t={t}
+        label="Around the World"
+        title="News &amp; Events"
+        subtitle="Upcoming gatherings, recent announcements, and community updates from around the world."
+        breadcrumb={true}
+      />
+
+      <main id="main-content">
+        <section aria-labelledby="events-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+
+            {/* Filter bar */}
+            <div role="group" aria-label="Filter events by type" style={{ display: "flex", gap: "0.5rem", marginBottom: "3rem", flexWrap: "wrap" }}>
+              {types.map(type => (
+                <button key={type} onClick={() => setFilter(type)}
+                  style={{
+                    padding: "0.5rem 1.2rem", border: `1px solid ${filter === type ? t.accent : t.border}`,
+                    background: filter === type ? t.accent : "transparent",
+                    color: filter === type ? t.accentText : t.textMuted,
+                    fontSize: "0.78rem", fontWeight: 500, letterSpacing: 1.5, textTransform: "uppercase",
+                    cursor: "pointer", fontFamily: "'Jost', sans-serif", transition: "all 0.2s",
+                  }}
+                  aria-pressed={filter === type}
+                >{type}</button>
+              ))}
+            </div>
+
+            <h2 id="events-heading" className="sr-only">Events list</h2>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5px", background: t.border }}>
+              {filtered.map((ev, i) => (
+                <article key={i} style={{ background: t.bgCard, padding: "2.5rem 2rem", display: "grid", gridTemplateColumns: "160px 1fr", gap: "2rem" }}>
+                  <div>
+                    <span style={{ background: t.tagBg, color: t.tagText, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", padding: "0.3rem 0.8rem", display: "inline-flex", alignItems: "center", marginBottom: "0.8rem" }}>{ev.type}</span>
+                    <div style={{ color: t.accent, fontSize: "0.8rem", fontWeight: 500, lineHeight: 1.5 }}>{ev.date}</div>
+                    <div style={{ color: t.textDim, fontSize: "0.75rem", fontWeight: 300, marginTop: "0.3rem" }}>{ev.location}</div>
+                  </div>
+                  <div>
+                    <h3 style={{ color: t.text, fontSize: "1rem", fontWeight: 500, lineHeight: 1.4, marginBottom: "0.8rem" }}>{ev.title}</h3>
+                    <p style={{ color: t.textMuted, fontSize: "0.88rem", lineHeight: 1.75, fontWeight: 300, marginBottom: ev.link ? "1rem" : 0 }}>{ev.body}</p>
+                    {ev.link && (
+                      <a href={ev.link} target="_blank" rel="noopener noreferrer"
+                        style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center" }}>
+                        Details &amp; Registration →
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Submit event CTA */}
+            <div style={{ marginTop: "3rem", padding: "2rem 2.5rem", background: t.bgAlt, border: `1px solid ${t.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+              <div>
+                <div style={{ color: t.text, fontWeight: 500, marginBottom: "0.3rem" }}>Share news with the community</div>
+                <div style={{ color: t.textMuted, fontSize: "0.85rem", fontWeight: 300 }}>Have an event or announcement? Submit it for listing here.</div>
+              </div>
+              <CTAButton t={t} href="join.html">Submit news or event →</CTAButton>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer t={t} />
+
+      <TweaksPanel>
+        <TweakSection label="Theme">
+          <TweakRadio label="Palette" value={tweaks.theme} onChange={v => setTweak("theme", v)}
+            options={[{ value: "midnight", label: "Midnight" }, { value: "dawn", label: "Dawn" }, { value: "threshold", label: "Threshold" }]} />
+        </TweakSection>
+        <TweakSection label="Typography">
+          <TweakRadio label="Headings" value={tweaks.titleFont} onChange={v => setTweak("titleFont", v)}
+            options={[{ value: "cinzel", label: "Cinzel" }, { value: "jost", label: "Jost" }]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<NewsPage />);
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Groups — Agni Yoga World Community</title>
+<meta name="description" content="Find a study group for the Agni Yoga (Living Ethics) teachings near you, or register your own group in the global directory.">
+<link rel="icon" type="image/x-icon" href="uploads/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"theme":"threshold","titleFont":"cinzel"}/*EDITMODE-END*/;
+
+const groups = [
+  { name: "White Mountain Education Association", location: "Prescott, Arizona, USA", region: "Americas", founded: "1982", format: "In-person & Online", desc: "Weekly classes, an annual Living Ethics Conference, and the Agni Yoga Quarterly. In-person and remote programmes available year-round.", link: "https://wmea-world.org/dv/white-mountain-education-association/" },
+  { name: "Agni Yoga Society", location: "New York, USA", region: "Americas", founded: "1920", format: "In-person & Online", desc: "Founded 1920, publisher of English translations of the Agni Yoga series. All fourteen volumes freely available online. Maintains the original archive of the teachings.", link: "https://www.agniyoga.org" },
+  { name: "Friends of the Roerichs", location: "London, UK", region: "Europe", founded: "—", format: "In-person", desc: "Monthly gatherings exploring the teachings alongside Roerich's art and the Banner of Peace movement." },
+  { name: "Roerich Cultural Centre", location: "Moscow, Russia", region: "Europe", founded: "—", format: "In-person", desc: "Active research and study community with a library, lecture programme, and regular seminars open to all." },
+  { name: "Living Ethics Circle", location: "Sydney, Australia", region: "Asia-Pacific", founded: "—", format: "Online", desc: "A small group meeting fortnightly via video call, welcoming students from Australia and New Zealand." },
+  { name: "Himalayan Heritage Group", location: "Bangalore, India", region: "Asia-Pacific", founded: "—", format: "In-person & Online", desc: "Connecting Indian students with the trans-Himalayan wisdom tradition shared in the Agni Yoga books." },
+];
+
+function GroupsPage() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const t = aywcThemes[tweaks.theme] || aywcThemes.threshold;
+  const [region, setRegion] = useState("All");
+
+  useEffect(() => {
+    const font = tweaks.titleFont === "cinzel" ? "'Cinzel', serif" : "'Jost', sans-serif";
+    document.documentElement.style.setProperty("--heading-font", font);
+    document.documentElement.style.setProperty("--heading-weight", tweaks.titleFont === "cinzel" ? "400" : "300");
+    const s = document.createElement("style");
+    s.textContent = commonCSS;
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, [tweaks.titleFont]);
+
+  const regions = ["All", "Americas", "Europe", "Asia-Pacific"];
+  const filtered = region === "All" ? groups : groups.filter(g => g.region === region);
+  const py = "5rem";
+
+  return (
+    <div style={{ background: t.bg, minHeight: "100vh" }}>
+      <Nav t={t} currentPage="groups.html" />
+
+      <PageHero t={t}
+        label="Directory"
+        title="Study Groups"
+        subtitle="Independent groups from around the world meet regularly to study the teachings. Find a group near you, or register your own."
+        breadcrumb={true}
+      />
+
+      <main id="main-content">
+        <section aria-labelledby="groups-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+
+            {/* Region filter */}
+            <div role="group" aria-label="Filter by region" style={{ display: "flex", gap: "0.5rem", marginBottom: "3rem", flexWrap: "wrap" }}>
+              {regions.map(r => (
+                <button key={r} onClick={() => setRegion(r)}
+                  style={{
+                    padding: "0.5rem 1.2rem", border: `1px solid ${region === r ? t.accent : t.border}`,
+                    background: region === r ? t.accent : "transparent",
+                    color: region === r ? t.accentText : t.textMuted,
+                    fontSize: "0.78rem", fontWeight: 500, letterSpacing: 1.5, textTransform: "uppercase",
+                    cursor: "pointer", fontFamily: "'Jost', sans-serif", transition: "all 0.2s",
+                  }}
+                  aria-pressed={region === r}
+                >{r}</button>
+              ))}
+            </div>
+
+            <h2 id="groups-heading" className="sr-only">Study groups list</h2>
+
+            <CardGrid t={t} cols="repeat(2, 1fr)">
+              {filtered.map((g, i) => (
+                <div key={i} style={{
+                  background: t.bgCard, padding: "2.5rem",
+                  transition: "background 0.2s",
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = t.bgCardHover}
+                  onMouseLeave={e => e.currentTarget.style.background = t.bgCard}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem", gap: "1rem" }}>
+                    <h3 style={{ color: t.text, fontSize: "0.95rem", fontWeight: 600, lineHeight: 1.4 }}>{g.name}</h3>
+                    <span style={{ background: t.tagBg, color: t.tagText, fontSize: 8, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", padding: "0.25rem 0.6rem", display: "inline-flex", alignItems: "center", whiteSpace: "nowrap", flexShrink: 0 }}>{g.format}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+                    <span style={{ color: t.accent, fontSize: "0.75rem", fontWeight: 500, letterSpacing: 0.5 }}>{g.location}</span>
+                    {g.founded !== "—" && <span style={{ color: t.textDim, fontSize: "0.75rem" }}>Est. {g.founded}</span>}
+                  </div>
+                  <p style={{ color: t.textMuted, fontSize: "0.87rem", lineHeight: 1.75, fontWeight: 300, marginBottom: g.link ? "1.5rem" : 0 }}>{g.desc}</p>
+                  {g.link && (
+                    <a href={g.link} target="_blank" rel="noopener noreferrer"
+                      style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center" }}>
+                      View group page →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </CardGrid>
+
+            {/* Register CTA */}
+            <div style={{ marginTop: "3rem", background: t.darkSection, padding: "3rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "2rem" }}>
+                <div>
+                  <div style={{ color: t.accentOnDark, fontSize: 10, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600, marginBottom: "0.6rem" }}>Don't see yours?</div>
+                  <div style={{ color: t.darkSectionText, fontWeight: 400, fontSize: "1rem", marginBottom: "0.4rem" }}>Register your study group</div>
+                  <div style={{ color: t.darkSectionMuted, fontSize: "0.85rem", fontWeight: 300 }}>Add your group to the directory so students in your area can find you.</div>
+                </div>
+                <CTAButton t={t} href="join.html" onDark={true}>Register your group →</CTAButton>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer t={t} />
+
+      <TweaksPanel>
+        <TweakSection label="Theme">
+          <TweakRadio label="Palette" value={tweaks.theme} onChange={v => setTweak("theme", v)}
+            options={[{ value: "midnight", label: "Midnight" }, { value: "dawn", label: "Dawn" }, { value: "threshold", label: "Threshold" }]} />
+        </TweakSection>
+        <TweakSection label="Typography">
+          <TweakRadio label="Headings" value={tweaks.titleFont} onChange={v => setTweak("titleFont", v)}
+            options={[{ value: "cinzel", label: "Cinzel" }, { value: "jost", label: "Jost" }]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<GroupsPage />);
+</script>
+</body>
+</html>

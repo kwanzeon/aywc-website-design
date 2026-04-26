@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Agni Yoga — Living Ethics Teaching | AYWC</title>
+<meta name="description" content="Learn about Agni Yoga (Living Ethics) — the spiritual teaching transmitted through Helena Roerich, the fourteen books of wisdom, and the path of conscious evolution.">
+<link rel="icon" type="image/x-icon" href="uploads/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="shared.jsx"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{"theme":"threshold","titleFont":"cinzel"}/*EDITMODE-END*/;
+
+function AboutPage() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const t = aywcThemes[tweaks.theme] || aywcThemes.threshold;
+
+  useEffect(() => {
+    const font = tweaks.titleFont === "cinzel" ? "'Cinzel', serif" : "'Jost', sans-serif";
+    document.documentElement.style.setProperty("--heading-font", font);
+    document.documentElement.style.setProperty("--heading-weight", tweaks.titleFont === "cinzel" ? "400" : "300");
+    const s = document.createElement("style");
+    s.textContent = commonCSS;
+    document.head.appendChild(s);
+    return () => document.head.removeChild(s);
+  }, [tweaks.titleFont]);
+
+  const py = "5rem";
+
+  return (
+    <div style={{ background: t.bg, minHeight: "100vh" }}>
+      <Nav t={t} currentPage="about.html" />
+
+      <PageHero t={t}
+        label="The Teaching"
+        title="About Agni Yoga"
+        subtitle="Agni Yoga, also known as Living Ethics, is a spiritual teaching transmitted through Helena Roerich in the early twentieth century — a yoga of daily life, of thought refined in fire, of love made conscious."
+        breadcrumb={true}
+      />
+
+      <main id="main-content">
+
+        {/* ── OVERVIEW ── */}
+        <section id="overview" aria-labelledby="overview-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "2fr 1fr", gap: "6rem" }}>
+            <div>
+              <SectionLabel t={t}>Overview</SectionLabel>
+              <SectionHeading t={t} id="overview-heading">What is Agni Yoga?</SectionHeading>
+              <div style={{ width: 48, height: 1, background: t.sectionLine, margin: "1.5rem 0" }}></div>
+              <p style={{ color: t.textMuted, fontSize: "1rem", lineHeight: 1.9, fontWeight: 300, marginBottom: "1.5rem" }}>
+                Agni Yoga is not a system of physical postures or breath exercises. It is a teaching for the development of the whole human being — the refinement of consciousness through active engagement with life. The name combines "Agni," the Sanskrit word for fire, with "Yoga," meaning union or discipline — the yoga of fire, the discipline of the fiery heart.
+              </p>
+              <p style={{ color: t.textMuted, fontSize: "1rem", lineHeight: 1.9, fontWeight: 300, marginBottom: "1.5rem" }}>
+                The teaching was given through Helena Roerich beginning in the 1920s, in collaboration with her husband, the painter and explorer Nicholas Roerich. It comprises fourteen books, collectively known as the Agni Yoga series or Living Ethics, touching on ethics, cosmology, the nature of the human spirit, and the evolutionary path of consciousness.
+              </p>
+              <p style={{ color: t.textMuted, fontSize: "1rem", lineHeight: 1.9, fontWeight: 300 }}>
+                Unlike paths that call the seeker away from the world into solitude or renunciation, Agni Yoga is practiced in the midst of life — in work, in relationship, in service. It calls each student to bring greater awareness, beauty, and goodwill into every act.
+              </p>
+            </div>
+            <div>
+              <div style={{ background: t.darkSection, padding: "2.5rem" }}>
+                <div style={{ color: t.accentOnDark, fontSize: 10, letterSpacing: 3, textTransform: "uppercase", fontWeight: 600, marginBottom: "1.2rem" }}>The Books</div>
+                {["Leaves of Morya's Garden I & II", "Agni Yoga", "Infinity I & II", "Hierarchy", "Heart", "Fiery World I, II & III", "Aum", "Brotherhood", "Supermundane I, II, III & IV"].map((book, i) => (
+                  <div key={i} style={{ color: t.darkSectionMuted, fontSize: "0.82rem", lineHeight: 1.6, fontWeight: 300, paddingBottom: "0.5rem", borderBottom: `1px solid rgba(232,221,208,0.07)`, marginBottom: "0.5rem" }}>
+                    {book}
+                  </div>
+                ))}
+                <a href="resources.html#texts" style={{ display: "inline-flex", alignItems: "center", marginTop: "1.2rem", color: t.accentOnDark, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase" }}>Read the texts →</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── TEACHINGS ── */}
+        <section id="teachings" aria-labelledby="teachings-heading" style={{ background: t.bgAlt, padding: `${py} 3rem`, borderTop: `1px solid ${t.border}` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div style={{ marginBottom: "3rem" }}>
+              <SectionLabel t={t}>Principles</SectionLabel>
+              <SectionHeading t={t} id="teachings-heading">The Core Teachings</SectionHeading>
+            </div>
+            <CardGrid t={t} cols="repeat(3, 1fr)">
+              {[
+                { title: "Living Ethics", body: "Moral refinement is not a set of rules but a living practice — the ongoing effort to bring greater consciousness, compassion, and beauty into thought, word, and action. Ethics is lived, not merely professed." },
+                { title: "The Heart", body: "The heart is treated not as a sentiment but as the seat of higher consciousness. The Agni Yoga books return again and again to the heart as the organ of true perception — the instrument of the spirit." },
+                { title: "Hierarchy", body: "The universe is understood as a great chain of evolving consciousness. The student aspires toward those of greater development, receiving guidance and inspiration while extending the same to those coming after." },
+                { title: "Maitreya", body: "The principle of Maitreya — universal brotherhood, the World Teacher — stands at the heart of the teaching. The age of Maitreya is understood as an era of greater cooperation and spiritual openness among humanity." },
+                { title: "Beauty", body: "Beauty is not decoration but necessity — a manifestation of spiritual truth. The student of Agni Yoga is called to cultivate beauty in every dimension of life, recognising it as a bridge to higher consciousness." },
+                { title: "Striving", body: "The student is called not to passive acceptance but to active striving — an unceasing aspiration toward higher understanding, greater service, and the refinement of consciousness in every circumstance." },
+              ].map((c, i) => (
+                <Card t={t} key={i}>
+                  <AccentLine t={t} />
+                  <h3 style={{ color: t.text, fontSize: "0.92rem", fontWeight: 600, letterSpacing: 0.5, marginBottom: "0.8rem" }}>{c.title}</h3>
+                  <p style={{ color: t.textMuted, fontSize: "0.88rem", lineHeight: 1.8, fontWeight: 300 }}>{c.body}</p>
+                </Card>
+              ))}
+            </CardGrid>
+          </div>
+        </section>
+
+        {/* ── PULL QUOTE ── */}
+        <section aria-label="Teaching quote" style={{ background: t.darkSection, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+            <div style={{ color: t.accentOnDark, fontSize: 24, marginBottom: "2rem", opacity: 0.5 }}>✦</div>
+            <blockquote>
+              <p style={{ color: t.darkSectionText, fontSize: "clamp(1.1rem, 2vw, 1.4rem)", fontWeight: 300, fontStyle: "italic", lineHeight: 1.8, letterSpacing: "0.01em", marginBottom: "1.5rem" }}>
+                "Agni Yoga does not call the student away from the world, but toward its transformation — through beauty consciously created, through the striving of the awakened heart, through service rendered as an act of spiritual will."
+              </p>
+              <footer style={{ color: t.darkSectionMuted, fontSize: "0.8rem", letterSpacing: 2, textTransform: "uppercase", fontWeight: 500 }}>Living Ethics</footer>
+            </blockquote>
+          </div>
+        </section>
+
+        {/* ── HELENA ROERICH ── */}
+        <section id="helena-roerich" aria-labelledby="helena-heading" style={{ background: t.bg, padding: `${py} 3rem` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 2fr", gap: "6rem", alignItems: "start" }}>
+            <div>
+              <SectionLabel t={t}>The Messenger</SectionLabel>
+              <SectionHeading t={t} id="helena-heading">Helena Roerich</SectionHeading>
+              <div style={{ width: 48, height: 1, background: t.sectionLine, margin: "1.5rem 0" }}></div>
+              <p style={{ color: t.textMuted, fontSize: "0.9rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "1.2rem" }}>
+                Helena Ivanovna Roerich (1879–1955) was a Russian philosopher, writer, and spiritual figure. Born in St. Petersburg, she collaborated closely with her husband Nicholas Roerich across a lifetime of extraordinary work — from the great Central Asian expedition to the creation of fourteen volumes of spiritual teaching.
+              </p>
+              <p style={{ color: t.textMuted, fontSize: "0.9rem", lineHeight: 1.85, fontWeight: 300, marginBottom: "1.2rem" }}>
+                She translated Helena Blavatsky's "The Secret Doctrine" into Russian, maintained decades of correspondence with students worldwide, and left behind personal notebooks — now published in English — that offer an intimate record of her inner life and spiritual development.
+              </p>
+              <a href="resources.html#notebooks" style={{ color: t.accent, fontSize: 10, letterSpacing: 2, fontWeight: 600, textTransform: "uppercase", display: "inline-flex", alignItems: "center", borderBottom: `1px solid ${t.accent}`, paddingBottom: 2 }}>Her Notebooks →</a>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5px", background: t.border }}>
+              {[
+                { label: "Born", value: "1879, St. Petersburg" },
+                { label: "Passed", value: "1955, Kalimpong, India" },
+                { label: "Books transmitted", value: "14 volumes" },
+                { label: "Languages translated", value: "12+" },
+                { label: "Correspondence", value: "Thousands of letters" },
+                { label: "Expedition", value: "Central Asia, 1924–28" },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ background: t.bgCard, padding: "1.5rem 2rem" }}>
+                  <div style={{ color: t.accent, fontSize: "0.7rem", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", marginBottom: "0.4rem" }}>{label}</div>
+                  <div style={{ color: t.text, fontSize: "0.95rem", fontWeight: 400 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── INTRO CTA ── */}
+        <section aria-label="Introduction" style={{ background: t.bgAlt, padding: `${py} 3rem`, borderTop: `1px solid ${t.border}` }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "2rem" }}>
+            <div>
+              <div style={{ color: t.text, fontWeight: 500, fontSize: "1.1rem", marginBottom: "0.5rem" }}>Ready to begin?</div>
+              <div style={{ color: t.textMuted, fontSize: "0.9rem", fontWeight: 300 }}>Read "Agni Yoga — An Introduction" or find a study group near you.</div>
+            </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <CTAButton t={t} href="resources.html#introduction">Read the introduction →</CTAButton>
+              <CTAButton t={t} href="groups.html" outline={true}>Find a study group →</CTAButton>
+            </div>
+          </div>
+        </section>
+
+      </main>
+      <Footer t={t} />
+
+      <TweaksPanel>
+        <TweakSection label="Theme">
+          <TweakRadio label="Palette" value={tweaks.theme} onChange={v => setTweak("theme", v)}
+            options={[{ value: "midnight", label: "Midnight" }, { value: "dawn", label: "Dawn" }, { value: "threshold", label: "Threshold" }]} />
+        </TweakSection>
+        <TweakSection label="Typography">
+          <TweakRadio label="Headings" value={tweaks.titleFont} onChange={v => setTweak("titleFont", v)}
+            options={[{ value: "cinzel", label: "Cinzel" }, { value: "jost", label: "Jost" }]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<AboutPage />);
+</script>
+</body>
+</html>
